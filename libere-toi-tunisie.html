@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تحرر — Contre l'Addiction en Tunisie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --noir:    #080810;
+  --rouge:   #c1121f;
+  --rouge2:  #e63946;
+  --sable:   #e8d5b0;
+  --or:      #c9963a;
+  --or2:     #f2c46d;
+  --vert:    #1b6c5e;
+  --vert2:   #2a9d8f;
+  --encre:   #0f1523;
+  --gris:    #13131f;
+  --blanc:   #faf7f2;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--noir);
+  color: var(--sable);
+  font-family: 'IBM Plex Mono', monospace;
+  cursor: none;
+  overflow-x: hidden;
+}
+
+/* ── CURSOR ── */
+#cur { position:fixed; width:10px; height:10px; background:var(--rouge2); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); mix-blend-mode:difference; transition:transform .15s; }
+#cur-ring { position:fixed; width:34px; height:34px; border:1.5px solid var(--or); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:all .2s ease; }
+body.hovering #cur { transform:translate(-50%,-50%) scale(2.5); }
+body.hovering #cur-ring { transform:translate(-50%,-50%) scale(1.6); border-color:var(--rouge2); }
+
+/* ── GRAIN ── */
+body::after {
+  content:'';
+  position:fixed; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='.035'/%3E%3C/svg%3E");
+  pointer-events:none; z-index:7999; opacity:.7;
+}
+
+/* ── PROGRESS ── */
+#prog { position:fixed; top:0; left:0; height:2px; background:linear-gradient(90deg,var(--rouge),var(--or)); z-index:9000; width:0; box-shadow:0 0 8px var(--rouge); transition:width .08s linear; }
+
+/* ── NAV ── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:1000;
+  padding:1.4rem 5rem;
+  display:flex; justify-content:space-between; align-items:center;
+  transition: background .4s, backdrop-filter .4s;
+}
+nav.s { background:rgba(8,8,16,.92); backdrop-filter:blur(18px); border-bottom:1px solid rgba(232,213,176,.06); }
+.nav-logo { font-family:'Bebas Neue'; font-size:1.4rem; letter-spacing:.25em; color:var(--sable); }
+.nav-logo span { color:var(--rouge2); }
+.nav-arab { font-size:1.1rem; color:var(--or); opacity:.7; margin-left:.5rem; }
+.nav-links { display:flex; gap:2.5rem; list-style:none; }
+.nav-links a { font-size:.6rem; letter-spacing:.25em; text-transform:uppercase; color:rgba(232,213,176,.45); text-decoration:none; transition:color .3s; }
+.nav-links a:hover { color:var(--or2); }
+
+/* ══ HERO ══════════════════════════════════════════ */
+#hero {
+  height:100vh; display:flex; flex-direction:column;
+  justify-content:center; align-items:flex-start;
+  padding: 0 5rem;
+  position:relative; overflow:hidden;
+  background: var(--noir);
+}
+
+.hero-geo {
+  position:absolute; inset:0; pointer-events:none;
+}
+
+.geo-arc {
+  position:absolute; right:-10vw; top:50%;
+  transform:translateY(-50%);
+  width:70vw; height:70vw;
+  border-radius:50%;
+  border:1px solid rgba(201,150,58,.08);
+  animation:arcPulse 8s ease infinite;
+}
+.geo-arc:nth-child(2) { width:55vw; height:55vw; border-color:rgba(201,150,58,.12); animation-delay:-2s; }
+.geo-arc:nth-child(3) { width:40vw; height:40vw; border-color:rgba(193,18,31,.1); animation-delay:-4s; }
+
+.hero-tag {
+  font-size:.65rem; letter-spacing:.5em; color:var(--rouge2);
+  text-transform:uppercase; margin-bottom:2.5rem;
+  animation: fadeUp .9s ease .2s both;
+}
+
+.hero-title {
+  font-family:'Bebas Neue';
+  font-size:clamp(4.5rem,14vw,13rem);
+  line-height:.88;
+  color:var(--blanc);
+  animation: fadeUp .9s ease .4s both;
+}
+.hero-title .ar {
+  display:block;
+  color:var(--or);
+  font-size:clamp(3rem,9vw,9rem);
+  text-shadow:0 0 80px rgba(201,150,58,.3);
+  animation:goldGlow 4s ease infinite alternate;
+}
+.hero-title .sub-line {
+  display:block;
+  -webkit-text-stroke:1px rgba(232,213,176,.15);
+  color:transparent;
+}
+
+.hero-body {
+  font-family:'Cormorant Garamond'; font-style:italic;
+  font-size:clamp(1rem,2vw,1.35rem);
+  color:rgba(232,213,176,.65);
+  max-width:520px; line-height:1.7;
+  margin-top:2rem;
+  animation: fadeUp .9s ease .6s both;
+}
+
+.hero-cta {
+  margin-top:3rem; display:flex; gap:1.2rem; flex-wrap:wrap;
+  animation: fadeUp .9s ease .8s both;
+}
+
+.btn {
+  font-family:'IBM Plex Mono'; font-size:.65rem; letter-spacing:.18em;
+  text-transform:uppercase; padding:.9rem 2.2rem;
+  cursor:none; text-decoration:none; display:inline-block;
+  transition:all .3s; position:relative; overflow:hidden;
+}
+.btn-rouge {
+  background:var(--rouge);
+  color:var(--blanc);
+  clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
+}
+.btn-rouge::after {
+  content:''; position:absolute; inset:0;
+  background:var(--rouge2);
+  transform:translateX(-110%); transition:transform .3s;
+}
+.btn-rouge:hover::after { transform:translateX(0); }
+.btn-rouge:hover { color:var(--blanc); }
+.btn-rouge span { position:relative; z-index:1; }
+
+.btn-ghost {
+  background:transparent; color:var(--sable);
+  border:1px solid rgba(232,213,176,.2);
+  clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
+}
+.btn-ghost:hover { border-color:var(--or); color:var(--or); }
+
+.hero-flag {
+  position:absolute; bottom:0; right:0;
+  width:40vw; height:100%;
+  background:linear-gradient(to left, rgba(193,18,31,.06), transparent);
+  pointer-events:none;
+}
+
+.scroll-hint {
+  position:absolute; bottom:2.5rem; left:5rem;
+  display:flex; align-items:center; gap:1rem;
+  animation: fadeUp .9s ease 1.2s both;
+}
+.scroll-hint span { font-size:.55rem; letter-spacing:.35em; color:rgba(232,213,176,.3); text-transform:uppercase; }
+.scroll-line { width:60px; height:1px; background:linear-gradient(to right,var(--rouge),transparent); animation:scrollLine 2s ease infinite; }
+
+/* ══ CHIFFRES ══════════════════════════════════════ */
+#chiffres {
+  background:var(--rouge);
+  padding:0;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  overflow:hidden;
+}
+.chiffre-item {
+  padding:3.5rem 2rem;
+  border-right:1px solid rgba(8,8,16,.15);
+  text-align:center; transition:background .3s; cursor:none;
+}
+.chiffre-item:last-child { border-right:none; }
+.chiffre-item:hover { background:rgba(8,8,16,.12); }
+.chiffre-num {
+  font-family:'Bebas Neue'; font-size:clamp(2.8rem,5vw,4.5rem);
+  color:var(--blanc); display:block; line-height:1;
+}
+.chiffre-lab { font-size:.6rem; letter-spacing:.15em; text-transform:uppercase; color:rgba(250,247,242,.65); display:block; margin-top:.6rem; line-height:1.5; }
+
+/* ══ ADDICTIONS ════════════════════════════════════ */
+#addictions {
+  padding:8rem 5rem;
+  background:var(--noir);
+}
+
+.s-tag { font-size:.6rem; letter-spacing:.5em; color:var(--rouge2); text-transform:uppercase; margin-bottom:1rem; }
+.s-title { font-family:'Bebas Neue'; font-size:clamp(2.8rem,7vw,6rem); line-height:.9; color:var(--blanc); }
+.s-title em { color:var(--or); font-style:normal; }
+
+.add-grid {
+  margin-top:4rem;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:rgba(232,213,176,.04);
+}
+
+.add-card {
+  background:var(--gris); padding:3rem 2.5rem;
+  position:relative; overflow:hidden; cursor:none;
+  transition:all .4s ease;
+}
+.add-card::before {
+  content:''; position:absolute; top:0; left:0;
+  width:0; height:3px;
+  background:var(--c, var(--rouge2));
+  transition:width .5s ease;
+}
+.add-card:hover::before { width:100%; }
+.add-card:hover { background:#0e0e1c; transform:translateY(-3px); }
+
+.add-icon { font-size:2.2rem; margin-bottom:1.5rem; display:block; }
+.add-name {
+  font-family:'Bebas Neue'; font-size:1.9rem; letter-spacing:.06em;
+  color:var(--c, var(--rouge2)); margin-bottom:.75rem;
+}
+.add-desc { font-size:.68rem; line-height:1.9; color:rgba(232,213,176,.5); }
+.add-n {
+  position:absolute; bottom:1rem; right:1.5rem;
+  font-family:'Bebas Neue'; font-size:3.5rem;
+  color:rgba(232,213,176,.05); line-height:1;
+}
+.add-tn {
+  margin-top:1.2rem; font-size:.6rem; letter-spacing:.1em;
+  color:var(--c, var(--rouge2)); opacity:.6;
+  text-transform:uppercase;
+}
+
+/* ══ LIBERATION ════════════════════════════════════ */
+#liberation {
+  padding:10rem 5rem;
+  background:var(--encre);
+  position:relative; overflow:hidden;
+}
+#liberation::before {
+  content:'تحرر';
+  position:absolute; font-family:'Bebas Neue';
+  font-size:30vw; color:rgba(255,255,255,.018);
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  white-space:nowrap; pointer-events:none; letter-spacing:-.02em;
+}
+
+.lib-inner {
+  max-width:1200px; margin:0 auto;
+  display:grid; grid-template-columns:1fr 1fr; gap:8rem; align-items:center;
+}
+
+.steps { counter-reset:st; }
+.step {
+  display:flex; gap:2.5rem; margin-bottom:3.5rem;
+  opacity:0; transform:translateX(-40px);
+  transition:all .6s ease;
+}
+.step.vis { opacity:1; transform:translateX(0); }
+.step-n {
+  font-family:'Bebas Neue'; font-size:4.5rem;
+  color:var(--or); opacity:.25; line-height:1; min-width:3rem;
+}
+.step-body h3 {
+  font-family:'Cormorant Garamond'; font-size:1.5rem;
+  color:var(--blanc); margin-bottom:.5rem;
+}
+.step-body p { font-size:.68rem; color:rgba(232,213,176,.5); line-height:1.9; }
+.step-body .arab { font-size:.8rem; color:var(--or); opacity:.5; margin-top:.4rem; display:block; }
+
+/* SVG VISUAL */
+.lib-svg-wrap { display:flex; justify-content:center; align-items:center; }
+.lib-svg { width:100%; max-width:380px; }
+
+/* ══ REGIONS ════════════════════════════════════════ */
+#regions {
+  padding:8rem 5rem;
+  background:var(--noir);
+}
+
+.regions-grid {
+  margin-top:4rem;
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(280px,1fr));
+  gap:1.5rem;
+}
+.region-card {
+  border:1px solid rgba(232,213,176,.07);
+  padding:2.5rem;
+  position:relative; transition:all .35s; cursor:none;
+  background:rgba(232,213,176,.02);
+}
+.region-card:hover { border-color:var(--or); background:rgba(201,150,58,.04); transform:translateY(-3px); }
+.region-flag { font-size:1.8rem; margin-bottom:1.2rem; }
+.region-city { font-family:'Bebas Neue'; font-size:1.5rem; letter-spacing:.1em; color:var(--or2); margin-bottom:.3rem; }
+.region-addr { font-size:.65rem; color:rgba(232,213,176,.5); line-height:1.7; }
+.region-tel { margin-top:1rem; font-size:.65rem; letter-spacing:.1em; color:var(--rouge2); text-decoration:none; display:block; transition:color .3s; }
+.region-tel:hover { color:var(--or2); }
+.region-badge {
+  position:absolute; top:1.5rem; right:1.5rem;
+  font-size:.55rem; letter-spacing:.15em; text-transform:uppercase;
+  background:rgba(193,18,31,.15); color:var(--rouge2);
+  padding:.25rem .7rem; border:1px solid rgba(193,18,31,.2);
+}
+
+/* ══ TEMOIGNAGES ════════════════════════════════════ */
+#temoignages {
+  padding:8rem 5rem;
+  background:var(--gris);
+  position:relative; overflow:hidden;
+}
+#temoignages::after {
+  content:'';
+  position:absolute; bottom:0; right:0;
+  width:40%; height:100%;
+  background:radial-gradient(ellipse at right, rgba(201,150,58,.04), transparent);
+  pointer-events:none;
+}
+
+.testi-wrap { max-width:820px; margin:4rem auto 0; text-align:center; }
+.testi { display:none; animation:fadeIn .5s ease; }
+.testi.on { display:block; }
+.testi-q {
+  font-family:'Cormorant Garamond'; font-size:clamp(1.3rem,3vw,1.9rem);
+  font-style:italic; color:var(--blanc); line-height:1.6; margin-bottom:2rem;
+  position:relative;
+}
+.testi-q::before {
+  content:'"'; font-size:9rem; font-family:'Bebas Neue';
+  color:var(--rouge); opacity:.12;
+  position:absolute; top:-3rem; left:0; line-height:1;
+}
+.testi-arab {
+  font-size:1.1rem; color:var(--or); opacity:.5;
+  display:block; margin-bottom:1.5rem;
+}
+.testi-who { font-size:.62rem; letter-spacing:.3em; color:var(--or2); text-transform:uppercase; }
+.testi-dots { display:flex; justify-content:center; gap:.75rem; margin-top:2.5rem; }
+.tdot {
+  width:6px; height:6px; border-radius:50%;
+  background:rgba(232,213,176,.2); cursor:none; transition:all .3s;
+}
+.tdot.on { background:var(--rouge2); width:22px; border-radius:3px; }
+
+/* ══ RESSOURCES ════════════════════════════════════ */
+#ressources {
+  padding:8rem 5rem;
+  background:var(--noir);
+}
+
+.res-grid {
+  margin-top:4rem;
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(270px,1fr));
+  gap:1.5px;
+  background:rgba(232,213,176,.04);
+}
+.res-card {
+  background:var(--encre); padding:2.8rem 2.5rem;
+  position:relative; overflow:hidden; cursor:none;
+  transition:all .35s;
+}
+.res-card::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg,rgba(201,150,58,.05),transparent);
+  opacity:0; transition:opacity .35s;
+}
+.res-card:hover { background:#0f0f1e; }
+.res-card:hover::after { opacity:1; }
+.res-ico { font-size:2rem; margin-bottom:1.5rem; display:block; }
+.res-title { font-family:'Bebas Neue'; font-size:1.5rem; letter-spacing:.06em; color:var(--blanc); margin-bottom:.75rem; }
+.res-desc { font-size:.67rem; color:rgba(232,213,176,.45); line-height:1.9; margin-bottom:1.5rem; }
+.res-link { font-size:.6rem; letter-spacing:.2em; text-transform:uppercase; color:var(--or); text-decoration:none; position:relative; }
+.res-link::after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:1px; background:var(--or); transition:width .3s; }
+.res-link:hover::after { width:100%; }
+
+/* ══ URGENCE ════════════════════════════════════════ */
+#urgence {
+  background:var(--rouge);
+  padding:7rem 5rem;
+  text-align:center; position:relative; overflow:hidden;
+}
+#urgence::before {
+  content:''; position:absolute; inset:0;
+  background:repeating-linear-gradient(45deg,transparent,transparent 24px,rgba(8,8,16,.05) 24px,rgba(8,8,16,.05) 48px);
+}
+#urgence::after {
+  content:'مساعدة';
+  position:absolute; font-family:'Bebas Neue';
+  font-size:30vw; color:rgba(8,8,16,.05);
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  white-space:nowrap; pointer-events:none;
+}
+
+.urg-label { font-size:.62rem; letter-spacing:.45em; text-transform:uppercase; color:rgba(250,247,242,.6); margin-bottom:1rem; position:relative; z-index:1; }
+.urg-title { font-family:'Bebas Neue'; font-size:clamp(2rem,6vw,4.5rem); color:var(--blanc); margin-bottom:.5rem; position:relative; z-index:1; }
+.urg-sub { font-family:'Cormorant Garamond'; font-style:italic; font-size:1.1rem; color:rgba(250,247,242,.7); margin-bottom:3.5rem; position:relative; z-index:1; }
+
+.urg-numbers { display:flex; justify-content:center; gap:5rem; flex-wrap:wrap; position:relative; z-index:1; }
+.urg-num-block { text-align:center; }
+.urg-num {
+  font-family:'Bebas Neue'; font-size:clamp(3.5rem,8vw,6rem);
+  color:var(--blanc); display:block; letter-spacing:.08em;
+  text-shadow:0 4px 40px rgba(8,8,16,.3);
+  animation:pulse 2.5s ease infinite;
+  text-decoration:none;
+}
+.urg-num-lab { font-size:.58rem; letter-spacing:.25em; color:rgba(250,247,242,.65); text-transform:uppercase; margin-top:.4rem; display:block; }
+
+/* ══ FOOTER ═════════════════════════════════════════ */
+footer {
+  background:#040408;
+  padding:3rem 5rem;
+  display:flex; justify-content:space-between; align-items:center;
+  flex-wrap:wrap; gap:1rem;
+  border-top:1px solid rgba(232,213,176,.05);
+}
+.f-logo { font-family:'Bebas Neue'; font-size:1.4rem; color:var(--rouge2); letter-spacing:.15em; }
+.f-arab { color:var(--or); opacity:.5; font-size:1rem; margin-left:.4rem; }
+.f-txt { font-size:.6rem; color:rgba(232,213,176,.25); letter-spacing:.1em; }
+
+/* ══ REVEAL ══════════════════════════════════════════ */
+.reveal { opacity:0; transform:translateY(35px); transition:opacity .7s ease,transform .7s ease; }
+.reveal.vis { opacity:1; transform:translateY(0); }
+
+/* ══ ANIMATIONS ══════════════════════════════════════ */
+@keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes arcPulse { 0%,100%{opacity:.6;transform:translateY(-50%) scale(1)} 50%{opacity:1;transform:translateY(-50%) scale(1.02)} }
+@keyframes goldGlow { 0%{text-shadow:0 0 60px rgba(201,150,58,.25)} 100%{text-shadow:0 0 100px rgba(201,150,58,.5),0 0 20px rgba(201,150,58,.3)} }
+@keyframes scrollLine { 0%,100%{opacity:.2;width:60px} 50%{opacity:.8;width:90px} }
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.015)} }
+
+@media(max-width:900px){
+  nav{padding:1.2rem 2rem;}
+  .nav-links{display:none;}
+  #hero,#addictions,#liberation,#regions,#temoignages,#ressources,#urgence{padding-left:2rem;padding-right:2rem;}
+  .add-grid,#chiffres{grid-template-columns:1fr 1fr;}
+  .lib-inner{grid-template-columns:1fr;gap:3rem;}
+  .urg-numbers{gap:2.5rem;}
+  footer{flex-direction:column;text-align:center;padding:2rem;}
+}
+@media(max-width:550px){
+  .add-grid,#chiffres{grid-template-columns:1fr;}
+  .hero-cta{flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<div id="prog"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">تحرر<span>.</span>TN <span class="nav-arab"></span></div>
+  <ul class="nav-links">
+    <li><a href="#addictions">Comprendre</a></li>
+    <li><a href="#liberation">Se Libérer</a></li>
+    <li><a href="#regions">Centres TN</a></li>
+    <li><a href="#temoignages">Témoignages</a></li>
+    <li><a href="#urgence">Aide Urgente</a></li>
+  </ul>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-geo">
+    <div class="geo-arc"></div>
+    <div class="geo-arc"></div>
+    <div class="geo-arc"></div>
+  </div>
+  <canvas id="cvs" style="position:absolute;inset:0;opacity:.12;pointer-events:none;"></canvas>
+  <div class="hero-flag"></div>
+
+  <p class="hero-tag">Tunisie · تونس · Contre l'Addiction</p>
+  <h1 class="hero-title">
+    <span class="ar">تحرر</span>
+    LIBÈRE
+    <span class="sub-line">TOI</span>
+  </h1>
+  <p class="hero-body">L'addiction touche des centaines de milliers de Tunisiens. Ce n'est pas une honte — c'est une maladie. Et comme toute maladie, elle se soigne.</p>
+  <div class="hero-cta">
+    <a href="#liberation" class="btn btn-rouge"><span>Commencer Maintenant</span></a>
+    <a href="#urgence" class="btn btn-ghost">Aide Immédiate</a>
+  </div>
+  <div class="scroll-hint">
+    <span>Découvrir</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ══ CHIFFRES ══ -->
+<section id="chiffres">
+  <div class="chiffre-item">
+    <span class="chiffre-num" data-t="800000">0</span>
+    <span class="chiffre-lab">Personnes dépendantes<br>en Tunisie</span>
+  </div>
+  <div class="chiffre-item">
+    <span class="chiffre-num" data-t="75">0</span>
+    <span class="chiffre-lab">% de guérison<br>avec prise en charge</span>
+  </div>
+  <div class="chiffre-item">
+    <span class="chiffre-num" data-t="24">0</span>
+    <span class="chiffre-lab">Centres CSMD<br>en Tunisie</span>
+  </div>
+  <div class="chiffre-item">
+    <span class="chiffre-num" data-t="1">0</span>
+    <span class="chiffre-lab">Décision<br>pour tout changer</span>
+  </div>
+</section>
+
+<!-- ══ ADDICTIONS ══ -->
+<section id="addictions">
+  <div class="reveal">
+    <p class="s-tag">La réalité tunisienne</p>
+    <h2 class="s-title">LES ADDICTIONS<br>QUI <em>TOUCHENT</em> LA TUNISIE</h2>
+  </div>
+
+  <div class="add-grid">
+    <div class="add-card reveal" style="--c:#c1121f">
+      <span class="add-icon">🍺</span>
+      <div class="add-name">Alcool</div>
+      <p class="add-desc">Malgré l'interdit religieux, l'alcoolisme touche une part croissante de la jeunesse tunisienne, souvent liée au chômage et à l'isolement.</p>
+      <p class="add-tn">Consommation en hausse depuis 2011</p>
+      <span class="add-n">01</span>
+    </div>
+    <div class="add-card reveal" style="--c:#e8a020">
+      <span class="add-icon">💉</span>
+      <div class="add-name">Tramadol & Opioïdes</div>
+      <p class="add-desc">Le Tramadol est devenu la drogue la plus consommée en Tunisie. Facilement accessible, il crée une dépendance physique rapide et dévastatrice.</p>
+      <p class="add-tn">1ère addiction médicamenteuse en TN</p>
+      <span class="add-n">02</span>
+    </div>
+    <div class="add-card reveal" style="--c:#2a9d8f">
+      <span class="add-icon">🌿</span>
+      <div class="add-name">Cannabis (Zatla)</div>
+      <p class="add-desc">Le cannabis — appelé "zatla" en tunisien — est très répandu chez les 15-30 ans. Sa consommation régulière altère durablement motivation et santé mentale.</p>
+      <p class="add-tn">60% des saisies de drogue en Tunisie</p>
+      <span class="add-n">03</span>
+    </div>
+    <div class="add-card reveal" style="--c:#e76f51">
+      <span class="add-icon">🚬</span>
+      <div class="add-name">Tabac</div>
+      <p class="add-desc">La Tunisie affiche l'un des taux de tabagisme les plus élevés d'Afrique. Les cigarettes bon marché et la pression sociale alimentent cette dépendance.</p>
+      <p class="add-tn">~50% des hommes tunisiens fumeurs</p>
+      <span class="add-n">04</span>
+    </div>
+    <div class="add-card reveal" style="--c:#a8dadc">
+      <span class="add-icon">📱</span>
+      <div class="add-name">Numérique & Jeux</div>
+      <p class="add-desc">Les réseaux sociaux et jeux en ligne captent des heures entières. La dépendance numérique détruit la concentration, les relations et le sommeil.</p>
+      <p class="add-tn">4h+/jour pour 70% des jeunes TN</p>
+      <span class="add-n">05</span>
+    </div>
+    <div class="add-card reveal" style="--c:#c77dff">
+      <span class="add-icon">💊</span>
+      <div class="add-name">Benzodiazépines</div>
+      <p class="add-desc">Les anxiolytiques et somnifères prescrits deviennent rapidement addictifs. L'automédication sans suivi médical est alarmante en Tunisie.</p>
+      <p class="add-tn">Usage en forte hausse post-COVID</p>
+      <span class="add-n">06</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LIBERATION ══ -->
+<section id="liberation">
+  <div class="lib-inner">
+    <div>
+      <div class="reveal">
+        <p class="s-tag" style="color:var(--or)">طريق الحرية</p>
+        <h2 class="s-title" style="color:var(--blanc)">5 ÉTAPES<br><em style="color:var(--or)">VERS LA</em><br>GUÉRISON</h2>
+      </div>
+      <div class="steps" style="margin-top:3rem">
+        <div class="step">
+          <span class="step-n">01</span>
+          <div class="step-body">
+            <h3>Reconnaître — الاعتراف</h3>
+            <p>Admettre que l'on a un problème est l'acte le plus courageux. En Tunisie, la honte sociale retarde souvent cette étape cruciale. Brise ce mur.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-n">02</span>
+          <div class="step-body">
+            <h3>Consulter — الاستشارة</h3>
+            <p>Le réseau CSMD (Centres de Santé Mentale et de Drogues) offre des soins gratuits et confidentiels dans toute la Tunisie. Tu n'es pas seul.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-n">03</span>
+          <div class="step-body">
+            <h3>Soutien familial — الدعم</h3>
+            <p>La famille tunisienne est une force. Impliquer ses proches dans le traitement triple les chances de succès selon les études locales.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-n">04</span>
+          <div class="step-body">
+            <h3>Suivre le traitement — المعالجة</h3>
+            <p>Thérapie, médicaments, groupes de parole — les CSMD proposent des protocoles adaptés à chaque type d'addiction sans jugement.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-n">05</span>
+          <div class="step-body">
+            <h3>Reconstruire — البناء</h3>
+            <p>Rejoindre une association, trouver un travail, créer de nouveaux liens — la guérison est aussi une nouvelle identité plus forte que l'ancienne.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lib-svg-wrap reveal">
+      <svg class="lib-svg" viewBox="0 0 380 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <radialGradient id="sunGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#f2c46d" stop-opacity=".9"/>
+            <stop offset="100%" stop-color="#c9963a" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <!-- Sun / dawn -->
+        <circle cx="190" cy="190" r="110" fill="url(#sunGrad)" opacity=".15"/>
+        <circle cx="190" cy="190" r="55" fill="#c9963a" opacity=".12" filter="url(#glow)"/>
+        <!-- Crescent (Tunisian symbol) -->
+        <path d="M 190 140 A 50 50 0 1 1 189.9 140 Z" fill="none" stroke="#c9963a" stroke-width="2" opacity=".3"/>
+        <circle cx="190" cy="190" r="38" fill="none" stroke="#c9963a" stroke-width="1.5" opacity=".4" filter="url(#glow)"/>
+        <circle cx="205" cy="178" r="30" fill="var(--encre)" opacity=".9"/>
+        <!-- Star -->
+        <text x="190" y="200" text-anchor="middle" font-size="18" fill="#c9963a" opacity=".6" filter="url(#glow)">★</text>
+        <!-- Chains (broken) -->
+        <g opacity=".5" stroke="#555" stroke-width="5" stroke-linecap="round" fill="none">
+          <!-- left chain -->
+          <rect x="80" y="270" width="55" height="32" rx="16" transform="rotate(-20,107,286)"/>
+          <rect x="60" y="300" width="55" height="32" rx="16" transform="rotate(-30,87,316)" opacity=".4"/>
+          <rect x="40" y="328" width="55" height="32" rx="16" transform="rotate(-40,67,344)" opacity=".25"/>
+          <!-- right chain -->
+          <rect x="240" y="270" width="55" height="32" rx="16" transform="rotate(20,267,286)"/>
+          <rect x="260" y="300" width="55" height="32" rx="16" transform="rotate(30,287,316)" opacity=".4"/>
+          <rect x="280" y="328" width="55" height="32" rx="16" transform="rotate(40,307,344)" opacity=".25"/>
+        </g>
+        <!-- Break spark -->
+        <g filter="url(#glow)">
+          <path d="M170 262 L190 245 L185 270 L210 255 L190 280 L195 260 Z" fill="#f2c46d" opacity=".8"/>
+        </g>
+        <!-- Hands reaching up -->
+        <path d="M155 320 Q160 280 175 265" stroke="rgba(232,213,176,.35)" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M225 320 Q220 280 205 265" stroke="rgba(232,213,176,.35)" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <!-- Text -->
+        <text x="190" y="390" text-anchor="middle" font-family="Bebas Neue" font-size="22" fill="#c9963a" letter-spacing="6" opacity=".85">أنت أقوى</text>
+        <text x="190" y="415" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="rgba(232,213,176,.3)" letter-spacing="3">TU ES PLUS FORT</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ══ REGIONS ══ -->
+<section id="regions">
+  <div class="reveal">
+    <p class="s-tag">Partout en Tunisie</p>
+    <h2 class="s-title">CENTRES D'AIDE<br><em>EN TUNISIE</em></h2>
+  </div>
+  <p class="reveal" style="margin-top:1rem;font-size:.7rem;color:rgba(232,213,176,.4);max-width:600px;line-height:1.8;">Les Centres de Santé Mentale et de Drogues (CSMD) offrent des soins <strong style="color:var(--or2)">gratuits et confidentiels</strong>. Aucune ordonnance requise pour consulter.</p>
+
+  <div class="regions-grid">
+    <div class="region-card reveal">
+      <div class="region-flag">🏛️</div>
+      <div class="region-city">Tunis</div>
+      <p class="region-addr">Hôpital Razi — Manouba<br>Centre National de Prise en Charge<br>des Toxicomanes</p>
+      <a href="tel:+21671600500" class="region-tel">+216 71 600 500</a>
+      <div class="region-badge">Principal</div>
+    </div>
+    <div class="region-card reveal">
+      <div class="region-flag">🌊</div>
+      <div class="region-city">Sfax</div>
+      <p class="region-addr">Hôpital Hédi Chaker<br>Service de Psychiatrie & Addictologie<br>Route El Ain</p>
+      <a href="tel:+21674241111" class="region-tel">+216 74 241 111</a>
+      <div class="region-badge">Sud</div>
+    </div>
+    <div class="region-card reveal">
+      <div class="region-flag">🕌</div>
+      <div class="region-city">Sousse</div>
+      <p class="region-addr">Hôpital Farhat Hached<br>Service Addictions<br>Avenue Ibn El Jazzar</p>
+      <a href="tel:+21673220500" class="region-tel">+216 73 220 500</a>
+      <div class="region-badge">Centre</div>
+    </div>
+    <div class="region-card reveal">
+      <div class="region-flag">🏔️</div>
+      <div class="region-city">Kasserine</div>
+      <p class="region-addr">Hôpital Régional de Kasserine<br>Unité Santé Mentale & Addictions<br>Kasserine Nord</p>
+      <a href="tel:+21677470011" class="region-tel">+216 77 470 011</a>
+      <div class="region-badge">Centre-Ouest</div>
+    </div>
+    <div class="region-card reveal">
+      <div class="region-flag">🌴</div>
+      <div class="region-city">Nabeul / Hammamet</div>
+      <p class="region-addr">Hôpital Mohamed Taher Maamouri<br>Service Psychiatrie<br>Nabeul Centre</p>
+      <a href="tel:+21672285233" class="region-tel">+216 72 285 233</a>
+      <div class="region-badge">Cap Bon</div>
+    </div>
+    <div class="region-card reveal">
+      <div class="region-flag">🦩</div>
+      <div class="region-city">Gabès</div>
+      <p class="region-addr">Hôpital Régional de Gabès<br>Unité Addictologie<br>Route de Matmata</p>
+      <a href="tel:+21675270066" class="region-tel">+216 75 270 066</a>
+      <div class="region-badge">Sud-Est</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TEMOIGNAGES ══ -->
+<section id="temoignages">
+  <div class="reveal" style="text-align:center">
+    <p class="s-tag" style="text-align:center">Voix tunisiennes</p>
+    <h2 class="s-title" style="text-align:center">ILS SE SONT<br><em>LIBÉRÉS</em></h2>
+  </div>
+  <div class="testi-wrap">
+    <div class="testi on">
+      <span class="testi-arab">كنت خايف نطلب المساعدة...</span>
+      <p class="testi-q">Pendant trois ans, le tramadol controlait ma vie. J'avais peur du regard des gens. Le CSMD de Manouba m'a sauvé sans me juger. Aujourd'hui je travaille, j'ai ma famille.</p>
+      <span class="testi-who">— Youssef, 31 ans · Tunis · Sobre depuis 2 ans</span>
+    </div>
+    <div class="testi">
+      <span class="testi-arab">الزطلة حسبتها ما عندهاش ضرر...</span>
+      <p class="testi-q">Je fumais du cannabis depuis mes 16 ans. Je croyais que c'était "naturel". À 24 ans, je ne pouvais plus étudier, plus me concentrer. La thérapie m'a rendu ma tête.</p>
+      <span class="testi-who">— Sana, 26 ans · Sfax · En rétablissement 18 mois</span>
+    </div>
+    <div class="testi">
+      <span class="testi-arab">أهلي كانوا ما يعرفوش...</span>
+      <p class="testi-q">Ma famille ne savait pas. Je cachais ma dépendance à l'alcool depuis des années. Le jour où j'ai parlé, le poids s'est enlevé. Ma mère m'a serré dans ses bras — c'était le début.</p>
+      <span class="testi-who">— Karim, 38 ans · Sousse · 4 ans sans alcool</span>
+    </div>
+    <div class="testi">
+      <span class="testi-arab">الدكتور قالي: مش عيب...</span>
+      <p class="testi-q">Le médecin m'a dit : "Ce n'est pas une honte, c'est une maladie." Ces mots ont tout changé. Les benzodiazépines ne me contrôlent plus. Je revis.</p>
+      <span class="testi-who">— Leila, 44 ans · Nabeul · 3 ans libre</span>
+    </div>
+    <div class="testi-dots">
+      <div class="tdot on" data-i="0"></div>
+      <div class="tdot" data-i="1"></div>
+      <div class="tdot" data-i="2"></div>
+      <div class="tdot" data-i="3"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ RESSOURCES ══ -->
+<section id="ressources">
+  <div class="reveal">
+    <p class="s-tag">Outils & Soutien</p>
+    <h2 class="s-title">RESSOURCES<br><em>DISPONIBLES</em></h2>
+  </div>
+  <div class="res-grid">
+    <div class="res-card reveal">
+      <span class="res-ico">🏥</span>
+      <div class="res-title">CSMD — Réseau National</div>
+      <p class="res-desc">24 Centres de Santé Mentale et Drogues répartis sur tout le territoire tunisien. Soins totalement gratuits, anonymes et sans jugement.</p>
+      <a href="https://www.santetunisie.rns.tn" target="_blank" class="res-link">Trouver un centre →</a>
+    </div>
+    <div class="res-card reveal">
+      <span class="res-ico">📞</span>
+      <div class="res-title">Ligne d'Écoute DHMK</div>
+      <p class="res-desc">L'association DHMK (Drogues, Hépatites, Marginalité, Kompromat) propose une ligne d'écoute anonyme pour les personnes dépendantes et leurs familles.</p>
+      <a href="tel:+21671764300" class="res-link">+216 71 764 300 →</a>
+    </div>
+    <div class="res-card reveal">
+      <span class="res-ico">👥</span>
+      <div class="res-title">Association ATIC</div>
+      <p class="res-desc">L'Association Tunisienne d'Information et de Communication sur la Drogue offre formations, groupes de parole et accompagnement des familles.</p>
+      <a href="#" class="res-link">Contacter l'ATIC →</a>
+    </div>
+    <div class="res-card reveal">
+      <span class="res-ico">🧠</span>
+      <div class="res-title">Thérapie Comportementale</div>
+      <p class="res-desc">La TCC est intégrée dans les protocoles tunisiens. Des psychologues formés en addictologie exercent dans tous les hôpitaux régionaux.</p>
+      <a href="#regions" class="res-link">Trouver un thérapeute →</a>
+    </div>
+    <div class="res-card reveal">
+      <span class="res-ico">🕌</span>
+      <div class="res-title">Soutien Spirituel</div>
+      <p class="res-desc">Pour ceux qui le souhaitent, l'accompagnement spirituel par des imams formés peut compléter le traitement médical dans plusieurs centres tunisiens.</p>
+      <a href="#" class="res-link">En savoir plus →</a>
+    </div>
+    <div class="res-card reveal">
+      <span class="res-ico">💬</span>
+      <div class="res-title">Groupes Anonymes</div>
+      <p class="res-desc">Des groupes d'entraide existent à Tunis, Sfax et Sousse. Partager son expérience avec d'autres permet de rompre l'isolement et de trouver de l'espoir.</p>
+      <a href="#" class="res-link">Rejoindre un groupe →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ URGENCE ══ -->
+<section id="urgence">
+  <p class="urg-label">Aide immédiate — مساعدة فورية</p>
+  <h2 class="urg-title">BESOIN D'AIDE MAINTENANT ?</h2>
+  <p class="urg-sub">Gratuit · Confidentiel · Disponible 24h/7j en Tunisie</p>
+
+  <div class="urg-numbers">
+    <div class="urg-num-block">
+      <a href="tel:190" class="urg-num">190</a>
+      <span class="urg-num-lab">SAMU — Urgences Médicales</span>
+    </div>
+    <div class="urg-num-block">
+      <a href="tel:+21671764300" class="urg-num" style="font-size:clamp(2rem,5vw,4rem)">+216 71 764 300</a>
+      <span class="urg-num-lab">DHMK — Ligne Drogue & Écoute</span>
+    </div>
+    <div class="urg-num-block">
+      <a href="tel:+21671600500" class="urg-num" style="font-size:clamp(2rem,5vw,4rem)">+216 71 600 500</a>
+      <span class="urg-num-lab">Hôpital Razi — Centre National</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div><span class="f-logo">تحرر.TN</span></div>
+  <p class="f-txt">Ensemble, on est plus fort. مع بعض أقوى — Tunisie 2025</p>
+  <p class="f-txt">Informations à titre indicatif — Consultez un professionnel de santé</p>
+</footer>
+
+<script>
+// CURSOR
+const cur = document.getElementById('cur');
+const ring = document.getElementById('cur-ring');
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px';
+  cur.style.top = e.clientY + 'px';
+  ring.style.left = e.clientX + 'px';
+  ring.style.top = e.clientY + 'px';
+});
+document.querySelectorAll('a,button,.add-card,.region-card,.res-card,.tdot').forEach(el => {
+  el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+  el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+});
+
+// PROGRESS
+const prog = document.getElementById('prog');
+window.addEventListener('scroll', () => {
+  const p = (scrollY / (document.documentElement.scrollHeight - innerHeight)) * 100;
+  prog.style.width = p + '%';
+});
+
+// NAV
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('s', scrollY > 60));
+
+// CANVAS PARTICLES (crescent + stars theme)
+const cvs = document.getElementById('cvs');
+const ctx = cvs.getContext('2d');
+function resize() { cvs.width = cvs.offsetWidth; cvs.height = cvs.offsetHeight; }
+resize();
+window.addEventListener('resize', resize);
+const pts = Array.from({length:70}, () => ({
+  x: Math.random() * cvs.width,
+  y: Math.random() * cvs.height,
+  r: Math.random() * 1.8 + .5,
+  vx: (Math.random()-.5)*.3,
+  vy: (Math.random()-.5)*.3,
+  a: Math.random()*.5+.1,
+  col: Math.random() > .5 ? '201,150,58' : '193,18,31',
+}));
+(function tick() {
+  ctx.clearRect(0,0,cvs.width,cvs.height);
+  pts.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if(p.x<0||p.x>cvs.width) p.vx*=-1;
+    if(p.y<0||p.y>cvs.height) p.vy*=-1;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(${p.col},${p.a})`;
+    ctx.fill();
+  });
+  pts.forEach((p,i) => {
+    pts.slice(i+1).forEach(q => {
+      const d = Math.hypot(p.x-q.x,p.y-q.y);
+      if(d < 100) {
+        ctx.beginPath();
+        ctx.moveTo(p.x,p.y);
+        ctx.lineTo(q.x,q.y);
+        ctx.strokeStyle = `rgba(201,150,58,${.07*(1-d/100)})`;
+        ctx.lineWidth = .5;
+        ctx.stroke();
+      }
+    });
+  });
+  requestAnimationFrame(tick);
+})();
+
+// COUNTERS
+function counter(el, target, dur=2000) {
+  let v = 0;
+  const isLarge = target > 9999;
+  const step = () => {
+    v += target / (dur/16);
+    if(v >= target) v = target;
+    el.textContent = isLarge ? Math.floor(v).toLocaleString('fr-FR') : Math.floor(v);
+    if(v < target) requestAnimationFrame(step);
+  };
+  step();
+}
+const cntObs = new IntersectionObserver(entries => {
+  if(entries[0].isIntersecting) {
+    document.querySelectorAll('[data-t]').forEach(el => counter(el, +el.dataset.t));
+    cntObs.disconnect();
+  }
+}, {threshold:.4});
+cntObs.observe(document.getElementById('chiffres'));
+
+// REVEAL
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('vis'); });
+}, {threshold:.08, rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+// STEPS
+const stepObs = new IntersectionObserver(entries => {
+  if(entries[0].isIntersecting) {
+    document.querySelectorAll('.step').forEach((s,i) => setTimeout(() => s.classList.add('vis'), i*180));
+    stepObs.disconnect();
+  }
+}, {threshold:.15});
+stepObs.observe(document.getElementById('liberation'));
+
+// TESTIMONIALS
+let cur2 = 0;
+const ts = document.querySelectorAll('.testi:not(:last-child)');
+const tdots = document.querySelectorAll('.tdot');
+function showT(i) {
+  ts.forEach(t => t.classList.remove('on'));
+  tdots.forEach(d => d.classList.remove('on'));
+  ts[i].classList.add('on');
+  tdots[i].classList.add('on');
+  cur2 = i;
+}
+tdots.forEach(d => d.addEventListener('click', () => showT(+d.dataset.i)));
+setInterval(() => showT((cur2+1) % ts.length), 5000);
+</script>
+</body>
+</html>
